@@ -4,19 +4,30 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace std;
+
+const double INF = 1e9;
 
 // Define a struct to represent an edge between two points
 struct Edge {
     int origin;
     int destination;
     double distance;
+    bool visited; // Add visited member
+
+};
+
+// Define a struct to represent a vertex
+struct Vertex {
+    int id;
+    vector<Edge> edges;
 };
 
 // Function to load dataset from a CSV file
 vector<Edge> loadDataset(const string& filename) {
-    vector<Edge> dataset;
+    vector<Edge> dataset; // Correct return type to vector<Edge>
     ifstream file(filename);
     if (!file.is_open()) {
         cerr << "Error: Unable to open file " << filename << endl;
@@ -29,20 +40,19 @@ vector<Edge> loadDataset(const string& filename) {
         if (line[0] == '#') continue; // Skip comment lines
 
         int origin, destination;
-        double distance;
+        double distance; // Change to double
         char comma;
         istringstream iss(line);
         iss >> origin >> comma >> destination >> comma >> distance;
 
-        Edge edge;
-        edge.origin = origin;
-        edge.destination = destination;
-        edge.distance = distance;
-        dataset.push_back(edge);
+        Edge edge1 = {origin, destination, distance, false}; // Initialize visited as false
+        Edge edge2 = {destination, origin, distance, false}; // Add reverse edge
+        dataset.push_back(edge1);
+        dataset.push_back(edge2); // Push both edges into dataset
     }
 
     file.close();
-    return dataset;
+    return dataset; // Return the correct type
 }
 
 // Function to display dataset
@@ -102,22 +112,61 @@ void exportResults() {
     cout << "Exporting results" << endl;
 }
 
+// Function to solve TSP using backtracking algorithm
+void tspBacktrack(vector<Edge>& graph, int u, int count, double cost, vector<int>& path, vector<int>& bestPath, double& bestCost) {
+    if (count == graph.size() && u == 0) {
+        if (cost < bestCost) {
+            bestCost = cost;
+            bestPath = path;
+        }
+        return;
+    }
+
+    for (size_t i = 0; i < graph.size(); ++i) {
+        if (graph[i].origin == u && !graph[i].visited) {
+            graph[i].visited = true;
+            path.push_back(graph[i].destination);
+            tspBacktrack(graph, graph[i].destination, count + 1, cost + graph[i].distance, path, bestPath, bestCost);
+            graph[i].visited = false;
+            path.pop_back();
+        }
+    }
+}
+
+// Function to solve TSP using backtracking algorithm
+void solveTSPBacktrack(vector<Vertex>& graph) {
+    vector<int> path;
+    vector<int> bestPath;
+    double bestCost = INF;
+    path.push_back(0); // Start from node 0
+    // Call tspBacktrack with appropriate arguments
+    tspBacktrack(graph[0].edges, 0, 1, 0.0, path, bestPath, bestCost);
+
+    // Output the best path and its cost
+    cout << "Best Path: ";
+    for (int node : bestPath) {
+        cout << node << " ";
+    }
+    cout << "0" << endl; // Return to the starting node
+    cout << "Cost: " << bestCost << endl;
+}
+
+
+
 int main() {
     vector<Edge> dataset;
-    unordered_map<int, vector<pair<int, double>>> graph;
+    vector<Vertex> graph;
 
     int choice;
     do {
         cout << "===== TSP Solver Interface Menu =====" << endl;
         cout << "1. Load Dataset" << endl;
         cout << "2. View Dataset" << endl;
-        cout << "3. Create Graph" << endl;
-        cout << "4. Print Graph" << endl;
-        cout << "5. Solve TSP (Exact Algorithm)" << endl;
-        cout << "6. Solve TSP (Heuristic Algorithm)" << endl;
-        cout << "7. Compare Solutions" << endl;
-        cout << "8. Export Results" << endl;
-        cout << "9. Exit" << endl;
+        cout << "3. Solve TSP (Backtracking Algorithm)" << endl;
+        cout << "4. Solve TSP (Heuristic Algorithm)" << endl;
+        cout << "5. Compare Solutions" << endl;
+        cout << "6. Export Results" << endl;
+        cout << "7. Exit" << endl;
         cout << "======================================" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
@@ -132,30 +181,26 @@ int main() {
                 viewDataset(dataset);
                 break;
             case 3:
-                // Create graph from dataset
-                graph = createGraph(dataset);
+                // Solve TSP using exact algorithm
+                solveTSPBacktrack(graph);
+                // Exibir resultados
+                cout << "\nPressione qualquer tecla e Enter para continuar...";
+                cin.ignore(); // Ignorar a entrada anterior
+                cin.get();    // Esperar por uma nova entrada
                 break;
             case 4:
-                // Print the created graph
-                printGraph(graph);
-                break;
-            case 5:
-                // Solve TSP using exact algorithm
-                solveExactAlgorithm(dataset);
-                break;
-            case 6:
                 // Solve TSP using heuristic algorithm
                 solveHeuristicAlgorithm(dataset);
                 break;
-            case 7:
+            case 5:
                 // Compare solutions
                 compareSolutions();
                 break;
-            case 8:
+            case 6:
                 // Export results
                 exportResults();
                 break;
-            case 9:
+            case 7:
                 // Exit the program
                 cout << "Exiting..." << endl;
                 break;
