@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -152,6 +153,90 @@ void solveTSPBacktrack(vector<Vertex>& graph) {
 }
 
 
+// Função para calcular a distância entre dois pontos geográficos usando a fórmula de distância Haversine
+double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
+    // Raio da Terra em quilômetros
+    const double R = 6371.0;
+
+    // Converter graus para radianos
+    double dLat = (lat2 - lat1) * M_PI / 180.0;
+    double dLon = (lon2 - lon1) * M_PI / 180.0;
+
+    // Calcular a distância entre os pontos usando a fórmula de Haversine
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+               cos(lat1 * M_PI / 180.0) * cos(lat2 * M_PI / 180.0) *
+               sin(dLon / 2) * sin(dLon / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = R * c;
+
+    return distance;
+}
+
+// Função para resolver TSP usando o algoritmo de aproximação triangular
+void solveTriangularApproximation(const vector<Vertex>& graph) {
+    // Inicializar variáveis para armazenar o custo total e o caminho percorrido
+    double totalCost = 0.0;
+    vector<int> path;
+
+    // Iniciar a partir do nó 0
+    int currentVertex = 0;
+    int startingVertex = 0;
+    path.push_back(startingVertex);
+
+    // Marcar todos os nós como não visitados
+    vector<bool> visited(graph.size(), false);
+    visited[startingVertex] = true;
+
+    // Continuar até todos os nós serem visitados
+    while (path.size() < graph.size()) {
+        double minDistance = INF;
+        int nextVertex = -1;
+
+        // Percorrer todas as arestas do nó atual
+        for (const auto& edge : graph[currentVertex].edges) {
+            // Se o destino da aresta não foi visitado e a distância é menor que a mínima até agora
+            if (!visited[edge.destination] && edge.distance < minDistance) {
+                minDistance = edge.distance;
+                nextVertex = edge.destination;
+            }
+        }
+
+        // Adicionar o próximo nó ao caminho e atualizar o custo total
+        path.push_back(nextVertex);
+        totalCost += minDistance;
+
+        // Marcar o próximo nó como visitado
+        visited[nextVertex] = true;
+
+        // Atualizar o nó atual para o próximo nó
+        currentVertex = nextVertex;
+    }
+
+    // Adicionar o nó inicial novamente para formar um ciclo
+    path.push_back(startingVertex);
+
+    // Calcular a distância da última aresta para formar um ciclo completo
+    double lastEdgeDistance = 0.0;
+    for (const auto& edge : graph[currentVertex].edges) {
+        if (edge.destination == startingVertex) {
+            lastEdgeDistance = edge.distance;
+            break;
+        }
+    }
+
+    // Adicionar a distância da última aresta ao custo total
+    totalCost += lastEdgeDistance;
+
+    // Exibir o caminho percorrido e o custo total
+    cout << "Best Path: ";
+    for (int node : path) {
+        cout << node << " ";
+    }
+    cout << startingVertex << endl; // Retornar ao nó inicial para formar um ciclo
+    cout << "Cost: " << totalCost << endl;
+}
+
+
 
 int main() {
     vector<Edge> dataset;
@@ -163,10 +248,11 @@ int main() {
         cout << "1. Load Dataset" << endl;
         cout << "2. View Dataset" << endl;
         cout << "3. Solve TSP (Backtracking Algorithm)" << endl;
-        cout << "4. Solve TSP (Heuristic Algorithm)" << endl;
-        cout << "5. Compare Solutions" << endl;
-        cout << "6. Export Results" << endl;
-        cout << "7. Exit" << endl;
+        cout << "4. Solve TSP (TriangularApproximation)" << endl;
+        cout << "5. Solve TSP (Heuristic Algorithm)" << endl;
+        cout << "6. Compare Solutions" << endl;
+        cout << "7. Export Results" << endl;
+        cout << "8. Exit" << endl;
         cout << "======================================" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
@@ -189,18 +275,26 @@ int main() {
                 cin.get();    // Esperar por uma nova entrada
                 break;
             case 4:
+                // Resolver TSP usando o algoritmo de aproximação triangular
+                solveTriangularApproximation(graph);
+                // Exibir resultados
+                cout << "\nPressione qualquer tecla e Enter para continuar...";
+                cin.ignore(); // Ignorar a entrada anterior
+                cin.get();    // Esperar por uma nova entrada
+                break;
+            case 5:
                 // Solve TSP using heuristic algorithm
                 solveHeuristicAlgorithm(dataset);
                 break;
-            case 5:
+            case 6:
                 // Compare solutions
                 compareSolutions();
                 break;
-            case 6:
+            case 7:
                 // Export results
                 exportResults();
                 break;
-            case 7:
+            case 8:
                 // Exit the program
                 cout << "Exiting..." << endl;
                 break;
