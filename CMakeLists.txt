@@ -4,4 +4,4 @@ project(FEUP_DA_Project2)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(FEUP_DA_Project2
-        Toy-Graphs/Toy-Graphs/tsp_solver.cpp)
+        src/tsp_solver.cpp)

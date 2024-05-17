@@ -1,0 +1,10 @@
+# Directories
+.idea/
+build/
+.vscode/
+cmake-build-debug/
+output/
+docs/output/
+
+# File Extensions
+*.o
