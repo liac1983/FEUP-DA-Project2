@@ -5,7 +5,7 @@
 Graph::Graph() {
     numVertices = 0;
     visited = std::vector<bool>(numVertices, false);
-    graphMatrix = std::vector<std::vector<int>>(numVertices, std::vector<int>(numVertices, 0));
+    graphMatrix = std::vector<std::vector<double>>(numVertices, std::vector<double>(numVertices, 0));
 }
 
 /* Getters */
@@ -18,7 +18,7 @@ const std::vector<bool> &Graph::getVisited() const {
     return visited;
 }
 
-const std::vector<std::vector<int>> &Graph::getGraphMatrix() const {
+const std::vector<std::vector<double>> &Graph::getGraphMatrix() const {
     return graphMatrix;
 }
 
@@ -32,13 +32,13 @@ void Graph::setVisited(const std::vector<bool> &newVisitedList) {
     Graph::visited = newVisitedList;
 }
 
-void Graph::setGraphMatrix(const std::vector<std::vector<int>> &newGraphMatrix) {
+void Graph::setGraphMatrix(const std::vector<std::vector<double>> &newGraphMatrix) {
     Graph::graphMatrix = newGraphMatrix;
 }
 
 /* Functions */
 
-void Graph::addEdge(int src, int dest, int distance)
+void Graph::addEdge(int src, int dest, double distance)
 {
     graphMatrix[src][dest] = distance;
 }
@@ -48,7 +48,7 @@ void Graph::removePipe(int src, int dest)
     graphMatrix[src][dest] = 0;
 }
 
-int Graph::getEdgeValue(int src, int dest)
+double Graph::getEdgeValue(int src, int dest)
 {
     return graphMatrix[src][dest];
 }

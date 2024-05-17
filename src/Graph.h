@@ -16,12 +16,12 @@ public:
     /* Getters */
     int getNumVertices() const;
     const std::vector<bool> &getVisited() const;
-    const std::vector<std::vector<int>> &getGraphMatrix() const;
+    const std::vector<std::vector<double>> &getGraphMatrix() const;
 
     /* Setters */
     void setNumVertices(int numVertices);
     void setVisited(const std::vector<bool> &visited);
-    void setGraphMatrix(const std::vector<std::vector<int>> &graphMatrix);
+    void setGraphMatrix(const std::vector<std::vector<double>> &graphMatrix);
 
     /* Functions */
     /**
@@ -30,7 +30,7 @@ public:
      * @param dest The destination node of the edge.
      * @param cap The distance of the edge.
      */
-    void addEdge(int src, int dest, int distance);
+    void addEdge(int src, int dest, double distance);
     /**
      * @brief Remove an edge from the graph.
      * @param src The source node of the edge.
@@ -43,13 +43,13 @@ public:
      * @param dest The destination node of the edge.
      * @return The distance value of the edge.
      */
-    int getEdgeValue(int src, int dest);
+    double getEdgeValue(int src, int dest);
 
 private:
 
     int numVertices;
     std::vector<bool> visited;
-    std::vector<std::vector<int>> graphMatrix;
+    std::vector<std::vector<double>> graphMatrix;
 
 };
 
