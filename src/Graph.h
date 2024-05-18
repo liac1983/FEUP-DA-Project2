@@ -53,6 +53,9 @@ public:
     void exhaustiveTSPUtil(int node, int count, double cost, double minCost, std::vector<int> &path, std::vector<std::vector<int>> &optimalPath);
     std::vector<std::vector<int>> exhaustiveTSP(double minCost);
 
+
+    /* Triangular Approximation Heuristic */
+    std::pair<double, std::vector<int>> triangularApproximation();
 private:
 
     int numVertices;

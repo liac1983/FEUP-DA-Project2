@@ -326,7 +326,48 @@ void Menu::BTMenu() {
 // ---------------- Triangular Approach ---------------- //
 
 void Menu::TAHMenu() {
+    if (graphSize == 2) {
+        system("clear || cls");
+        cout << endl
+             << "   | TRIANGULAR APPROXIMATION HEURISTIC |" << endl << endl
+             << "   Due to the complexity of the algorithm, it is not available for this data set." << endl;
 
+        pressEnterToReturn();
+        mainMenu(false);
+        return;
+    } else {
+        auto start = chrono::high_resolution_clock::now();
+
+        graph.loadGraphWithFile(dataPath);
+
+        auto load = chrono::high_resolution_clock::now();
+
+        pair<double, vector<int>> result = graph.triangularApproximation();
+
+        auto end = chrono::high_resolution_clock::now();
+
+        auto loadTime = chrono::duration_cast<chrono::microseconds>(load - start).count();
+        auto algorithmTime = chrono::duration_cast<chrono::milliseconds>(end - load).count();
+
+        system("clear || cls");
+        cout << endl
+             << "   | TRIANGULAR APPROXIMATION HEURISTIC |" << endl << endl
+             << "   Data Load Time: " << loadTime << " us" << endl
+             << "   Algorithm Time: " << algorithmTime << " ms" << endl << endl
+             << "   Approximate Path: " << endl
+             << "      Cost: " << result.first << endl
+             << "      Path: ";
+
+        for (auto i = result.second.begin(); i != result.second.end(); i++) {
+            if (i == result.second.begin()) cout << *i;
+            else if (i + 1 == result.second.end()) cout << " -> " << *i << endl;
+            else cout << " -> " << *i;
+        }
+
+        pressEnterToReturn();
+        mainMenu(false);
+        return;
+    }
 }
 
 // ----------------- Auxiliary Functions ---------------- //
