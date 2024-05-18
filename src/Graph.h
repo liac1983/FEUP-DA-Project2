@@ -5,19 +5,6 @@
 #include <vector>
 #include <unordered_map>
 
-struct Node {
-    int id;
-    double latitude;
-    double longitude;
-    std::string label;
-};
-
-struct Edge {
-    int source;
-    int target;
-    double weight;
-};
-
 /**
  * @brief Class representing the graph's data structure.
  */
@@ -48,32 +35,24 @@ public:
      */
     void haversine(int i, int j);
     /**
-     * @brief Load the node coordinates with the contents from a file.
-     * @param fileLocation The location of the file containing the graph data.
-     */
-    void loadNodeCoordinates(const std::string &fileLocation);
-    /**
      * @brief Load the graph with the contents from a file.
      * @param fileLocation The location of the file containing the graph data.
      */
-    void loadGraph(const std::string &fileLocation);
+    void loadGraphWithFile(const std::string &fileLocation);
     /**
-     * @brief Load the extra large graphs with the contents from a file.
+     * @brief Load the node coordinates with the contents from a file.
      * @param fileLocation The location of the file containing the graph data.
+     * @param numNodes The number of nodes in the graph.
      */
-    void loadExtraLargeGraph(const std::string &fileLocation);
+    void loadNodeCoordinates(const std::string &fileLocation, int numNodes);
+    void loadGraphWithCoordinates();
 
     /* Graph Operations */
     void TSPUtil(int node, int count, double cost, double &minCost, std::vector<int> &path, std::vector<int> &optimalPath);
     std::pair<double, std::vector<int>> TSP();
+    void exhaustiveTSPUtil(int node, int count, double cost, double minCost, std::vector<int> &path, std::vector<std::vector<int>> &optimalPath);
+    std::vector<std::vector<int>> exhaustiveTSP(double minCost);
 
-    std::unordered_map<int, Node> nodes;
-    std::unordered_map<int, std::vector<Edge>> adjacencyList;
-
-    void addNode(int id, double latitude, double longitude, const std::string& label);
-    void addEdge(int source, int target, double weight);
-    void display() const;
-    double tspApproximation(int start) const;
 private:
 
     int numVertices;
@@ -82,7 +61,5 @@ private:
     std::unordered_map<int,std::pair<double,double>> nodeCoordinates;
 
 };
-
-double haversine(double lat1, double lon1, double lat2, double lon2);
 
 #endif /* GRAPH_H */

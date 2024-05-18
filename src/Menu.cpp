@@ -1,7 +1,6 @@
 #include "Menu.h"
-#include "Graph.h"
-#include <limits>
-#include <fstream>
+
+#include <chrono>
 #include <iostream>
 #include <algorithm>
 
@@ -37,10 +36,10 @@ void Menu::setUpMenu() {
                 setUpSmall();
                 return;
             case 2:
-                setUpLarge();
+                setUpMedium();
                 return;
             case 3:
-                setUpExtraLarge();
+                setUpLarge();
                 return;
             default:
                 cout << endl << "   Please select a valid option: ";
@@ -58,10 +57,10 @@ void Menu::setUpSmall() {
 
     system("clear || cls");
     cout << endl
-         << "   Please select the data set:" << endl << endl
+         << "   Please select the graph to be used:" << endl << endl
          << "     1. Tourism" << endl << endl
-         << "     2. Shipping" << endl << endl
-         << "     3. Stadiums" << endl << endl
+         << "     2. Stadiums" << endl << endl
+         << "     3. Shipping" << endl << endl
          << "   Select your option: ";
 
     while (!(cin >> input)) {
@@ -72,15 +71,21 @@ void Menu::setUpSmall() {
     do {
         switch (input) {
             case 1:
-                graph.loadGraph("../data/small/tourism.csv");
+                graphSize = 0;
+                graph.numVertices = 5;
+                dataPath = "../data/small/tourism.csv";
                 mainMenu(true);
                 return;
             case 2:
-                graph.loadGraph("../data/small/shipping.csv");
+                graphSize = 0;
+                graph.numVertices = 11;
+                dataPath = "../data/small/stadiums.csv";
                 mainMenu(true);
                 return;
             case 3:
-                graph.loadGraph("../data/small/stadiums.csv");
+                graphSize = 0;
+                graph.numVertices = 14;
+                dataPath = "../data/small/shipping.csv";
                 mainMenu(true);
                 return;
             default:
@@ -94,18 +99,92 @@ void Menu::setUpSmall() {
     while(true);
 }
 
-void Menu::setUpLarge() {
+void Menu::setUpMedium() {
+    string input;
+    int selectedOption;
 
+    vector<int> options = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
+
+    system("clear || cls");
+    cout << endl
+         << "   Please type the number of nodes you want to use:" << endl << endl
+         << "     Available options:" << endl
+         << "     [25,50,75,100,200,300,400,500,600,700,800,900]" << endl << endl
+         << "   Type your option: ";
+
+    getline(cin >> ws, input);
+
+    do {
+        try {
+            selectedOption = stoi(input);
+        } catch (invalid_argument& e) {
+            cout << endl << "   Please enter a valid code : ";
+            getline(cin >> ws, input);
+            continue;
+        }
+        if (find(options.begin(), options.end(), stoi(input)) != options.end()) {
+            graphSize = 1;
+            graph.numVertices = selectedOption;
+            dataPath = "../data/large/edges_" + input + ".csv";
+            mainMenu(true);
+            return;
+        }
+        cout << endl << "   Please enter a valid code : ";
+        getline(cin >> ws, input);
+    }
+    while(true);
 }
 
-void Menu::setUpExtraLarge() {
+void Menu::setUpLarge() {
+    int input;
 
+    system("clear || cls");
+    cout << endl
+         << "   Please select the graph to be used:" << endl << endl
+         << "     1. Graph 999" << endl << endl
+         << "     2. Graph 4999" << endl << endl
+         << "     3. Graph 9999" << endl << endl
+         << "   Select your option: ";
+
+    while (!(cin >> input)) {
+        cout << endl << "   Please select a valid option: ";
+        cin.clear(); cin.ignore(10000, '\n');
+    }
+
+    do {
+        switch (input) {
+            case 1:
+                graphSize = 2;
+                graph.numVertices = 999;
+                dataPath = "../data/extra_large/graph1/";
+                mainMenu(true);
+                return;
+            case 2:
+                graphSize = 2;
+                graph.numVertices = 4999;
+                dataPath = "../data/extra_large/graph2/";
+                mainMenu(true);
+                return;
+            case 3:
+                graphSize = 2;
+                graph.numVertices = 9999;
+                dataPath = "../data/extra_large/graph3/";
+                mainMenu(true);
+                return;
+            default:
+                cout << endl << "   Please select a valid option: ";
+                while (!(cin >> input)) {
+                    cout << endl << "   Please select a valid option: ";
+                    cin.clear(); cin.ignore(10000, '\n');
+                }
+        }
+    }
+    while(true);
 }
 
 // --------------------- Main Menu --------------------- //
 
 void Menu::mainMenu(bool isLoading) {
-    Graph graph;
     int input;
 
     mainMenuOptions(isLoading);
@@ -115,29 +194,18 @@ void Menu::mainMenu(bool isLoading) {
         cin.clear(); cin.ignore(10000, '\n');
     }
 
-    vector<Graph> dataset;
-
     do {
         switch (input) {
             case 0:
                 return;
             case 1:
-                Graph::loadGraph("../shipping.csv");
+                BTMenu();
                 return;
             case 2:
-                lineFailuresMenu();
-                return;
-            case 3:
-                graph.display();
-                break;
-
-            case 4:
-                int startNode = 0; // Assume starting node has the ID 0
-                double result = graph.tspApproximation(startNode);
-                std::cout << "Approximate TSP tour distance: " << result << std::endl;
+                TAHMenu();
                 return;
             case 9:
-                if (confirmChoice(true)) setUpMenu();
+                if (confirmChoice(0)) setUpMenu();
                 else mainMenu(false);
                 return;
             default:
@@ -155,7 +223,7 @@ void Menu::mainMenuOptions(bool isLoading) {
     system("clear || cls");
     if (isLoading) {
         cout << endl
-             << "   Routing Algorithm for Ocean Shipping and Urban Deliveries                     A.Neves | L.Cunha" << endl
+             << "   Routing Manager - Ocean and Urban Deliveries        A.Neves | L.Cunha" << endl
              << "   ---------------------------------------------------------------------" << endl;
     }
     else
@@ -164,165 +232,104 @@ void Menu::mainMenuOptions(bool isLoading) {
              << "   ---------------------------------------------------------------------" << endl;
 
     cout << "   Please select your desired option by typing it on the selector intake" << endl << endl
-         << "     1. load Graph" << endl
-         << "     2. Display graph" << endl
-         << "     3. Solve TSP (Backtracking Algorithm)" << endl << endl
-         << "     4. Solve TSP (TriangularApproximation)" << endl << endl
-         << "     5. Solve TSP (Heuristic Algorithm)" << endl << endl << endl
+         << "     1. Backtracking Algorithm" << endl << endl
+         << "     2. Triangular Approximation Heuristic" << endl << endl << endl
          << "     9. Change Data Set" << endl << endl
          << "     0. Exit application" << endl << endl
          << "   Select your option : ";
 }
 
+// -------------------- Backtracking ------------------- //
 
-
-
-// ------------------- Line Failures ------------------- //
-
-void Menu::lineFailuresMenu() {
-    int input;
-
-    lineFailuresMenuPrinter();
-
-    while (!(cin >> input)) {
-        cout << endl << "   Please select a valid option : ";
-        cin.clear(); cin.ignore(10000, '\n');
-    }
-
-    do {
-        switch (input) {
-            case 0:
-                return;
-            case 1:
-                failuresRemovePipe();
-            case 9:
-                mainMenu(false);
-                return;
-            default:
-                cout << endl << "   Please select a valid option : ";
-                while (!(cin >> input)) {
-                    cout << endl << "   Please select a valid option : ";
-                    cin.clear(); cin.ignore(10000, '\n');
-                }
-        }
-    }
-    while(true);
-}
-
-void Menu::lineFailuresMenuPrinter() {
-    system("clear || cls");
-    cout << endl
-         << "   Reliability and Sensitivity to Line Failures" << endl
-         << "   ---------------------------------------------------------------------" << endl
-         << "   Please select your desired option by typing it on the selector intake" << endl << end
-         << "     1. Remove a Pipe" << endl << endl << endl
-         << "     9. Return to Main Menu" << endl << endl
-         << "     0. Exit application" << endl << endl
-         << "   Select your option : ";
-}
-
-
-
-void Menu::failuresRemovePipe() {
-    system("clear || cls");
-    cout << endl << "   | SOURCE |" << endl
-         << endl << "   Please enter a valid station code : ";
-
-    auto* src = receiveNode<Node>("", false);
-
-    cout << endl << "   | TARGET |" << endl
-         << endl << "   Please enter a valid station code : ";
-
-    auto* dest = receiveNode<Node>("", false);
-
-    Pipe* pipeSD = src->getPipeTo(dest);
-    if (pipeSD != nullptr) pipeSD->setCapacity(0);
-    Pipe* pipeDS = dest->getPipeTo(src);
-    if (pipeDS != nullptr) pipeDS->setCapacity(0);
-
-    network.edmondsKarp(); subNetwork.edmondsKarp();
-
-    cout << endl
-         << "   " << src->getCode() << " -> " << dest->getCode() << " has been removed from the network." << endl << endl
-         << "   | CITIES AFFECTED |" << endl << endl;
-
-    int n = 0;
-
-    for (int i = 0; i < network.getCitySet().size(); i++)
-    {
-        City *city1 = network.getCitySet()[i];
-        City *city2 = subNetwork.getCitySet()[i];
-        if (city1->getCapacity() != city2->getCapacity()) {
-            cout << "   " << city1->getCode() << " | " << city1->getName() << endl
-                 << "     Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
-                 << "     New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
-                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) -
-                                        (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
-            n++;
-        }
-    }
-
-    if (n == 0) cout << "   No city has been affected." << endl << endl;
-
-    if (confirmChoice(1))
-    {
-        string filename = getFilename();
-        filename = "../output/" + filename + ".txt";
-
-        ofstream outFile(filename);
-        if(!outFile.is_open()) outFile.open(filename);
-
-        outFile << "| CITIES AFFECTED |" << endl << endl;
-
-        for (int i = 0; i < network.getCitySet().size(); i++)
-        {
-            City *city1 = network.getCitySet()[i];
-            City *city2 = subNetwork.getCitySet()[i];
-            if (city1->getCapacity() != city2->getCapacity()) {
-                outFile << city1->getCode() << " | " << city1->getName() << endl
-                        << "  Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
-                        << "  New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
-                        << "  Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) -
-                                            (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
-                n++;
-            }
-        }
-
-        if (n == 0) outFile << "   No city has been affected." << endl << endl;
-
-        outFile << src->getCode() << " -> " << dest->getCode() << " has been removed from the network." << endl;
-
-        outFile.close();
-
-        subNetwork.deleteNetwork();
-        subNetwork.createNetwork(dataPath);
+void Menu::BTMenu() {
+    if (graphSize == 2) {
+        system("clear || cls");
+        cout << endl
+             << "   | BACKTRACKING ALGORITHM |" << endl << endl
+             << "   Due to the complexity of the Backtracking Algorithm, it is not available for this data set." << endl;
 
         pressEnterToReturn();
-        lineFailuresMenu();
+        mainMenu(false);
         return;
     }
+    else {
+        auto start = chrono::high_resolution_clock::now();
 
-    subNetwork.deleteNetwork();
-    subNetwork.createNetwork(dataPath);
+        graph.loadGraphWithFile(dataPath);
 
-    lineFailuresMenu();
+        auto load = chrono::high_resolution_clock::now();
+
+        pair<int, vector<int>> result = graph.TSP();
+
+        auto end = chrono::high_resolution_clock::now();
+
+        auto loadTime = chrono::duration_cast<chrono::microseconds>(load - start).count();
+        auto algorithmTime = chrono::duration_cast<chrono::milliseconds>(end - load).count();
+
+        system("clear || cls");
+        cout << endl
+             << "   | BACKTRACKING ALGORITHM |" << endl << endl
+             << "   Data Load Time: " << loadTime << " us" << endl
+             << "   Algorithm Time: " << algorithmTime << " ms" << endl << endl
+             << "   Optimal Path: " << endl
+             << "      Cost: " << result.first << endl
+             << "      Path: ";
+
+        for (auto i = result.second.begin(); i != result.second.end(); i++) {
+            if (i == result.second.begin()) cout << *i;
+            else if (i + 1 == result.second.end()) cout << " -> " << *i << endl;
+            else cout << " -> " << *i;
+        }
+
+        if (dataPath != "../data/small/shipping.csv") {
+            if (confirmChoice(1)) {
+                vector<vector<int>> optimalPaths = graph.exhaustiveTSP(result.first);
+
+                system("clear || cls");
+                cout << endl
+                     << "   | BACKTRACKING ALGORITHM |" << endl << endl
+                     << "   Data Load Time: " << loadTime << " us" << endl
+                     << "   Algorithm Time: " << algorithmTime << " ms" << endl << endl
+                     << "   Optimal Path: " << endl
+                     << "      Cost: " << result.first << endl
+                     << "      Path: ";
+
+                for (auto i = result.second.begin(); i != result.second.end(); i++) {
+                    if (i == result.second.begin()) cout << *i;
+                    else if (i + 1 == result.second.end()) cout << " -> " << *i << endl;
+                    else cout << " -> " << *i;
+                }
+
+                cout << endl << "   Found " << optimalPaths.size() - 1 << " additional optimal paths:" << endl << endl;
+
+                for (auto pathIndex = 1; pathIndex != optimalPaths.size(); pathIndex++) {
+                    cout << "      ";
+
+                    auto path = optimalPaths[pathIndex];
+                    for (auto i = path.begin(); i != path.end(); i++) {
+                        if (i == path.begin()) cout << *i;
+                        else cout << " -> " << *i;
+                    }
+
+                    cout << endl;
+                }
+
+                pressEnterToReturn();
+            }
+        } else pressEnterToReturn();
+
+        mainMenu(false);
+        return;
+    }
+}
+
+// ---------------- Triangular Approach ---------------- //
+
+void Menu::TAHMenu() {
+
 }
 
 // ----------------- Auxiliary Functions ---------------- //
-
-int Menu::receiveNode() {
-    string input;
-
-    getline(cin >> ws, input);
-
-    do {
-        int node = stoi(input);
-        if (node >= 0 && node < graph.getNumVertices()) return node;
-        cout << endl << "   Please enter a valid code : ";
-        getline(cin >> ws, input);
-    }
-    while(true);
-}
 
 bool Menu::confirmChoice(int flag) {
     int input;
@@ -338,10 +345,11 @@ bool Menu::confirmChoice(int flag) {
                  << "   Select your option : ";
             break;
         case 1:
-            cout << "   -------------------------" << endl << endl
-                 << "   Do you wish to save the results?" << endl << endl
-                 << "     1. Save results to file" << endl << endl
-                 << "     2. Go back" << endl << endl
+            cout << endl
+                 << "   -------------------------" << endl << endl
+                 << "   Do you wish to see every optimal path found?" << endl << endl
+                 << "     1. Yes" << endl << endl
+                 << "     2. No" << endl << endl
                  << "   Select your option : ";
             break;
         case 2:

@@ -4,7 +4,7 @@
 #include "Graph.h"
 
 /**
- * @brief Class representing the menu for interacting with the water supply network.
+ * @brief Class representing the menu for interacting with the graph.
  */
 class Menu {
 public:
@@ -13,48 +13,62 @@ public:
     Menu();
 
     /* Set Up */
-    void setUpMenu(); /**< Sets up the menu. */
-    void setUpSmall(); /**< Sets up the small graph menu. */
-    void setUpLarge(); /**< Sets up the large graph menu. */
-    void setUpExtraLarge(); /**< Sets up the extra large graph menu. */
+    /**
+     * @brief Displays the Setup Menu where the user can choose the size of the data set to work with.
+     */
+    void setUpMenu();
+    /**
+     * @brief Displays the Small Graph Menu where the user can choose the graph to work with.
+     */
+    void setUpSmall();
+    /**
+     * @brief Displays the Large Graph Menu where the user can choose the graph to work with.
+     */
+    void setUpMedium();
+    /**
+     * @brief Displays the Extra Large Graph Menu where the user can choose the graph to work with.
+     */
+    void setUpLarge();
 
     /* Main Menu */
-    void mainMenu(bool isLoading); /**< Display the main menu. */
-    static void mainMenuOptions(bool isLoading); /**< Display main menu options. */
+    /**
+     * @brief Manages the user input for the Main Menu.
+     * @param isLoading Flag indicating if the menu is being loaded for the first time.
+     */
+    void mainMenu(bool isLoading);
+    /**
+     * @brief Displays the Main Menu.
+     * @param isLoading Flag indicating if the menu is being loaded for the first time.
+     */
+    static void mainMenuOptions(bool isLoading);
 
-    /* Basic Service */
-    void basicServiceMenu(); /**< Display basic service menu. */
-    void basicMaxFlowMenu(); /**< Display basic maximum flow menu. */
-    void basicMaxFlowAll(); /**< Calculate maximum flow for all nodes. */
-    void basicMaxFlowSingle(); /**< Calculate maximum flow for a single node. */
-    void basicWaterDemand(); /**< Calculate water demand deficits. */
-    static void basicServiceMenuPrinter(); /**< Print basic service menu options. */
-    static void basicMaxFlowMenuPrinter(); /**< Print basic maximum flow menu options. */
+    /* Backtracking */
 
-    /* Line Failures */
-    void lineFailuresMenu(); /**< Display line failures menu. */
-    void failuresRemoveStation(); /**< Remove a station due to failure. */
-    void failuresRemoveReservoir(); /**< Remove a reservoir due to failure. */
-    void failuresRemovePipe(); /**< Remove a pipe due to failure. */
-    static void lineFailuresMenuPrinter(); /**< Print line failures menu options. */
+    /**
+     * @brief Loads the graph with the contents from a file, calls the TSP function and displays the results.
+     */
+    void BTMenu();
+
+    /* Triangular Approximation */
+    void TAHMenu();
 
     /* Auxiliary Functions */
-    /**
-     * @brief Receives a node from the user.
-     * @return The node number received from the user.
-     */
-    int receiveNode();
     /**
      * @brief Confirms the user's choice based on the provided flag.
      * @param flag The flag indicating the type of confirmation.
      * @return True if the user confirms, false otherwise.
      */
     static bool confirmChoice(int flag);
-    static void pressEnterToReturn(); /**< Prompt user to press Enter to return. */
+    /**
+     * @brief Prompts the user to press Enter to return.
+     */
+    static void pressEnterToReturn();
 
 private:
 
     Graph graph; /**< Main Graph. */
+    int graphSize; /**< Size of the graph. */
+    std::string dataPath; /**< Path to the data file. */
 
 };
 
