@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "Network.h"
+#include "Graph.h"
 
 /**
  * @brief Class representing the menu for interacting with the water supply network.
@@ -14,7 +14,9 @@ public:
 
     /* Set Up */
     void setUpMenu(); /**< Sets up the menu. */
-    void setUpCustom(); /**< Gets the path to a custom data set. */
+    void setUpSmall(); /**< Sets up the small graph menu. */
+    void setUpLarge(); /**< Sets up the large graph menu. */
+    void setUpExtraLarge(); /**< Sets up the extra large graph menu. */
 
     /* Main Menu */
     void mainMenu(bool isLoading); /**< Display the main menu. */
@@ -38,32 +40,21 @@ public:
 
     /* Auxiliary Functions */
     /**
-     * @brief Receives a node based on user input and type.
-     * @tparam NodeType The type of node.
-     * @param type The type of node to receive.
-     * @param networkID Indicates whether the node belongs to the main network.
-     * @return A pointer to the received node.
+     * @brief Receives a node from the user.
+     * @return The node number received from the user.
      */
-    template<typename NodeType>
-    NodeType* receiveNode(const std::string& type, bool network);
+    int receiveNode();
     /**
      * @brief Confirms the user's choice based on the provided flag.
      * @param flag The flag indicating the type of confirmation.
      * @return True if the user confirms, false otherwise.
      */
-    static bool confirmChoice(int flag); /**< Confirm a choice. */
+    static bool confirmChoice(int flag);
     static void pressEnterToReturn(); /**< Prompt user to press Enter to return. */
-    /**
-     * @brief Gets a filename from the user.
-     * @return The filename entered by the user.
-     */
-    static std::string getFilename(); /**< Get a filename. */
 
 private:
 
-    Network network; /**< Main network. */
-    Network subNetwork; /**< Subnetwork. */
-    std::string dataPath; /**< Path to data files. */
+    Graph graph; /**< Main Graph. */
 
 };
 

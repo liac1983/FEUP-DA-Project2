@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.27)
-project(FEUP_DA_Project2)
+cmake_minimum_required(VERSION 3.10)
+project(TransportManager)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -8,15 +8,14 @@ set(SRC_DIR ./src)
 set(
         SOURCE_FILES
         main.cpp
-        ${SRC_DIR}/tsp_solver.cpp
-        ${SRC_DIR}/Menu.cpp
+        #${SRC_DIR}/Menu.cpp
         ${SRC_DIR}/Graph.cpp
-        ${SRC_DIR}/Parsing.cpp
+        #${SRC_DIR}/tsp_solver.cpp
 )
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/output)
 
-add_executable(FEUP_DA_Project2 ${SOURCE_FILES})
+add_executable(TransportManager ${SOURCE_FILES})
 
 # Doxygen Build
 

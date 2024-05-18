@@ -9,6 +9,7 @@
  */
 class Graph {
 public:
+    friend class Menu;
 
     /* Constructor */
     Graph();
@@ -44,6 +45,14 @@ public:
      * @return The distance value of the edge.
      */
     double getEdgeValue(int src, int dest);
+    /**
+     * @brief Load the graph with the contents from a file.
+     * @param fileLocation The location of the file containing the graph data.
+     */
+    static void loadGraph(const std::string &fileLocation);
+
+    void TSPUtil(int node, int count, double cost, double &minCost, std::vector<int> &path, std::vector<int> &optimalPath);
+    std::pair<double, std::vector<int>> TSP();
 
 private:
 

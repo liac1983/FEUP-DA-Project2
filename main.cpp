@@ -1,7 +1,14 @@
-#include "Menu.h"
+#include "src/Graph.h"
+#include <vector>
 
 int main()
 {
-    Menu menu;
+    Graph graph;
+    graph.loadGraph("../data/small/tourism.csv");
+
+    int i = 0;
+
+    std::pair<double, std::vector<int>> result = graph.TSP();
+
     return 0;
 }
