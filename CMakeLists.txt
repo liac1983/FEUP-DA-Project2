@@ -8,9 +8,10 @@ set(SRC_DIR ./src)
 set(
         SOURCE_FILES
         main.cpp
-        #${SRC_DIR}/Menu.cpp
+        ${SRC_DIR}/Menu.cpp
         ${SRC_DIR}/Graph.cpp
-        #${SRC_DIR}/tsp_solver.cpp
+        ${SRC_DIR}/Parsing.cpp
+        ${SRC_DIR}/TSP.cpp
 )
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/output)

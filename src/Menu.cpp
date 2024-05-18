@@ -105,6 +105,7 @@ void Menu::setUpExtraLarge() {
 // --------------------- Main Menu --------------------- //
 
 void Menu::mainMenu(bool isLoading) {
+    Graph graph;
     int input;
 
     mainMenuOptions(isLoading);
@@ -125,6 +126,15 @@ void Menu::mainMenu(bool isLoading) {
                 return;
             case 2:
                 lineFailuresMenu();
+                return;
+            case 3:
+                graph.display();
+                break;
+
+            case 4:
+                int startNode = 0; // Assume starting node has the ID 0
+                double result = graph.tspApproximation(startNode);
+                std::cout << "Approximate TSP tour distance: " << result << std::endl;
                 return;
             case 9:
                 if (confirmChoice(true)) setUpMenu();
@@ -154,10 +164,11 @@ void Menu::mainMenuOptions(bool isLoading) {
              << "   ---------------------------------------------------------------------" << endl;
 
     cout << "   Please select your desired option by typing it on the selector intake" << endl << endl
-         << "     1. load Graph" << endl << end
-         << "     2. Solve TSP (Backtracking Algorithm)" << endl << endl
-         << "     3. Solve TSP (TriangularApproximation)" << endl << endl
-         << "     4. Solve TSP (Heuristic Algorithm)" << endl << endl << endl
+         << "     1. load Graph" << endl
+         << "     2. Display graph" << endl
+         << "     3. Solve TSP (Backtracking Algorithm)" << endl << endl
+         << "     4. Solve TSP (TriangularApproximation)" << endl << endl
+         << "     5. Solve TSP (Heuristic Algorithm)" << endl << endl << endl
          << "     9. Change Data Set" << endl << endl
          << "     0. Exit application" << endl << endl
          << "   Select your option : ";
