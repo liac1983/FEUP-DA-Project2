@@ -13,15 +13,15 @@ void Graph::TSPUtil(int node, int count, double cost, double &minCost, vector<in
 
     if (count == numVertices) {
         // If all nodes are visited, add the cost of the edge from the last node to the first node
-        cost += getEdgeValue(path.back(), path.front());
+        cost += graphMatrix[path.back()][path.front()];
         if (cost < minCost) {
             minCost = cost;
             optimalPath = path;
         }
     } else {
         for (int i = 0; i < numVertices; i++) {
-            if (!visited[i] && cost + getEdgeValue(node, i) < minCost) {
-                TSPUtil(i, count + 1, cost + getEdgeValue(node, i), minCost, path, optimalPath);
+            if (!visited[i] && graphMatrix[node][i] != -1 && cost + graphMatrix[node][i] < minCost) {
+                TSPUtil(i, count + 1, cost + graphMatrix[node][i], minCost, path, optimalPath);
             }
         }
     }

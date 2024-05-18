@@ -41,9 +41,17 @@ public:
     void setNodeCoordinates(const std::unordered_map<int, std::pair<double, double>> &nodeCoordinates);
 
     /* Parsing */
-
+    /**
+     * @brief Calculate the distance between two nodes using the Haversine formula.
+     * @param i The first node id.
+     * @param j The second node id.
+     */
+    void haversine(int i, int j);
+    /**
+     * @brief Load the node coordinates with the contents from a file.
+     * @param fileLocation The location of the file containing the graph data.
+     */
     void loadNodeCoordinates(const std::string &fileLocation);
-
     /**
      * @brief Load the graph with the contents from a file.
      * @param fileLocation The location of the file containing the graph data.
