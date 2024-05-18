@@ -5,6 +5,7 @@ build/
 cmake-build-debug/
 output/
 docs/output/
+data/extra_large/
 
 # File Extensions
 *.o
