@@ -32,19 +32,26 @@ public:
      * @brief Calculate the distance between two nodes using the Haversine formula.
      * @param i The first node id.
      * @param j The second node id.
+     * @complexity O(1)
      */
     void haversine(int i, int j);
     /**
      * @brief Load the graph with the contents from a file.
      * @param fileLocation The location of the file containing the graph data.
+     * @complexity O(E), where E is the number of edges.
      */
     void loadGraphWithFile(const std::string &fileLocation);
     /**
      * @brief Load the node coordinates with the contents from a file.
      * @param fileLocation The location of the file containing the graph data.
      * @param numNodes The number of nodes in the graph.
+     * @complexity O(V), where V is the number of vertices.
      */
     void loadNodeCoordinates(const std::string &fileLocation, int numNodes);
+    /**
+     * @brief Calculate distances between nodes based on coordinates and populate the adjacency matrix.
+     * @complexity O(V^2), where V is the number of vertices.
+     */
     void loadGraphWithCoordinates();
 
     /* Graph Operations */
@@ -55,6 +62,11 @@ public:
 
 
     /* Triangular Approximation Heuristic */
+    /**
+     * @brief Solve the TSP using the Triangular Approximation Heuristic.
+     * @return std::pair<double, std::vector<int>> The cost and the approximate path.
+     * @complexity O(V^2), where V is the number of vertices.
+     */
     std::pair<double, std::vector<int>> triangularApproximation();
 private:
 

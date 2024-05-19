@@ -50,6 +50,10 @@ public:
     void BTMenu();
 
     /* Triangular Approximation */
+    /**
+     * @brief Loads the graph with the contents from a file, calls the Triangular Approximation Heuristic function and displays the results.
+     * @complexity O(V^2), where V is the number of vertices.
+     */
     void TAHMenu();
 
     /* Auxiliary Functions */
