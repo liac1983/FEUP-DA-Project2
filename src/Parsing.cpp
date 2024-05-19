@@ -68,13 +68,12 @@ void Graph::loadGraphWithFile(const string &fileLocation) {
     file.close();
 }
 
-void Graph::loadNodeCoordinates(const string &fileLocation, int numNodes) {
+void Graph::loadNodeCoordinates(const string &fileLocation) {
     fstream file;
     file.open(fileLocation, ios::in);
     if (!file.is_open())
         throw runtime_error("ERROR - The function \"loadNodeCoordinates\" could not read the node coordinates data");
 
-    numVertices = numNodes;
     visited = vector<bool>(numVertices, false);
     graphMatrix = vector<vector<double>>(numVertices, vector<double>(numVertices, -1));
     for (int i = 0; i < numVertices; i++) graphMatrix[i][i] = 0;
@@ -93,7 +92,7 @@ void Graph::loadNodeCoordinates(const string &fileLocation, int numNodes) {
         getline(ss, latitude, ',');
         getline(ss, longitude);
 
-        if (stoi(id) == numNodes) break;
+        if (stoi(id) == numVertices) break;
 
         nodeCoordinates[stoi(id)] = {stod(latitude), stod(longitude)};
     }

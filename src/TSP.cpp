@@ -69,14 +69,11 @@ vector<vector<int>> Graph::exhaustiveTSP(double minCost) {
     return optimalPathList;
 }
 
-/**
- * Triangular Approximation Heuristic
- */
-std::pair<double, std::vector<int>> Graph::triangularApproximation() {
+pair<double, vector<int>> Graph::triangularApproximation() {
     vector<int> tour;
-    vector<bool> visited(numVertices, false);
     int currentNode = 0;
     double totalCost = 0.0;
+    visited = vector<bool>(numVertices, false);
 
     tour.push_back(currentNode);
     visited[currentNode] = true;
