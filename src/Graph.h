@@ -32,24 +32,24 @@ public:
      * @brief Calculate the distance between two nodes using the Haversine formula.
      * @param i The first node id.
      * @param j The second node id.
-     * @complexity O(1)
+     * The time complexity is O(1)
      */
     void haversine(int i, int j);
     /**
      * @brief Load the graph with the contents from a file.
      * @param fileLocation The location of the file containing the graph data.
-     * @complexity O(E), where E is the number of edges.
+     * The time complexity is O(E), where E is the number of edges.
      */
     void loadGraphWithFile(const std::string &fileLocation);
     /**
      * @brief Load the node coordinates map with the contents from a file.
      * @param fileLocation The location of the file containing the graph data.
-     * @complexity O(V), where V is the number of vertices.
+     * The time complexity is O(V), where V is the number of vertices.
      */
     void loadNodeCoordinates(const std::string &fileLocation);
     /**
      * @brief Calculate distances between nodes based on coordinates and populate the adjacency matrix.
-     * @complexity O(V^2), where V is the number of vertices.
+     * The time complexity is O(V^2), where V is the number of vertices.
      */
     void loadGraphWithCoordinates();
 
@@ -68,7 +68,7 @@ public:
      * @param path The path taken so far.
      * @param optimalPath The optimal path found so far.
      *
-     * @complexity O(n!), where n is the number of vertices.
+     * The time complexity is O(n!), where n is the number of vertices.
      */
     void TSPUtil(int node, int count, double cost, double &minCost, std::vector<int> &path, std::vector<int> &optimalPath);
     /**
@@ -94,7 +94,7 @@ public:
      * @param path The path taken so far.
      * @param optimalPath The optimal paths found so far.
      *
-     * @complexity O(n!), where n is the number of vertices.
+     * The time complexity is O(n!), where n is the number of vertices.
      */
     void exhaustiveTSPUtil(int node, int count, double cost, double minCost, std::vector<int> &path, std::vector<std::vector<int>> &optimalPath);
     /**
@@ -111,7 +111,7 @@ public:
      *
      * @return std::pair<double, std::vector<int>> The cost and the approximate path.
      *
-     * @complexity O(V^2), where V is the number of vertices.
+     * The time complexity is O(V^2), where V is the number of vertices.
      */
     std::pair<double, std::vector<int>> triangularApproximation();
 
